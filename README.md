@@ -1,1 +1,1 @@
-# darty-spyfall [![Build Status](https://travis-ci.org/DartySpies/darty-spyfall.svg?branch=master)](https://travis-ci.org/DartySpies/darty-spyfall) [![Coverage Status](https://coveralls.io/repos/github/DartySpies/darty-spyfall/badge.svg?branch=master)](https://coveralls.io/github/DartySpies/darty-spyfall?branch=master)
+# darty-spyfall [![Build Status](https://travis-ci.org/DartySpies/darty-spyfall.svg?branch=master)](https://travis-ci.org/DartySpies/darty-spyfall)
