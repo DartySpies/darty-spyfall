@@ -1,6 +1,7 @@
 package com.dartyspies.spyfall;
 
 import io.dropwizard.Application;
+import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -27,13 +28,19 @@ public class App extends Application<AppConfiguration> {
     @Override
     public void run(AppConfiguration configuration,
                     Environment environment) {
-        final PlayerIdResource resource = new PlayerIdResource();
-        environment.jersey().register(resource);
-        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+		Game game = new Game();
+		environment.jersey().register(new PlayerIdResource(game));
+        environment.jersey().register(new GameResource(game));
+        
+        enableCORS(environment);
+    }
+
+	private void enableCORS(Environment environment) {
+		final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
         cors.setInitParameter("allowedOrigins", "*");
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
         cors.setInitParameter("allowedMethods", "GET");
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-    }
+	}
 
 }
