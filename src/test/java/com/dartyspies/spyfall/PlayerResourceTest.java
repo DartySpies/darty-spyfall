@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import io.dropwizard.testing.junit.ResourceTestRule;
 
-public class PlayerIdResourceTest {
+public class PlayerResourceTest {
 
 	private static Games games = new Games();
 	@ClassRule
@@ -24,6 +24,16 @@ public class PlayerIdResourceTest {
 		
 		assertThat(response.getStatus()).isEqualTo(401);
 		assertThat(response.readEntity(String.class)).contains("La partie est démarrée");
+	}
+
+	@Test
+	public void should_read_players_card() throws Exception {
+		int id = Integer.parseInt(resources.target("/player/id").request().get().readEntity(String.class));
+		game.start();
+
+		Response response = resources.target("/player/" + id + "/card").request().get();
+
+		assertThat(response.readEntity(String.class)).isEqualTo("SPY");
 	}
 }
  

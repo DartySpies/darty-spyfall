@@ -21,4 +21,11 @@ public class PlayerIdResource {
 		}
 		return ++nextId + "";
 	}
+
+	@GET
+	@Path("/{id}/card")
+	public String getCard(@PathParam("id") Integer playerId) {
+
+		return null;
+	}
 }
