@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
-public class GameFeature {
+public class GameFeatures {
     @ClassRule
     public static final DropwizardAppRule<AppConfiguration> RULE =
             new DropwizardAppRule<AppConfiguration>(App.class,
@@ -21,27 +21,37 @@ public class GameFeature {
 
 	@Test
 	public void should_prevent_additional_players_from_getting_an_id_after_game_start() throws Exception {
-		getPlayerId();
-		getPlayerId();
-		getPlayerId();
-		getPlayerId();
-		getPlayerId();
-		getPlayerId();
+		
+		Response newGameResponse = request("/game").get();
+		assertThat(newGameResponse.getStatus()).isEqualTo(200);
+		String gameId = newGameResponse.readEntity(String.class);
+		
+		getPlayerId(gameId);
+		getPlayerId(gameId);
+		getPlayerId(gameId);
+		getPlayerId(gameId);
+		getPlayerId(gameId);
+		getPlayerId(gameId);
 
-		Response gameResponse = request("/game").post(null);
-		assertThat(gameResponse.getStatus()).isEqualTo(204);
+		Response gameStartResponse = startGame(gameId);
+		assertThat(gameStartResponse.getStatus()).isEqualTo(204);
 
-		Response playerIdResponse = getPlayerId();
+		Response playerIdResponse = getPlayerId(gameId);
 		assertThat(playerIdResponse.getStatus()).isEqualTo(401);
 		assertThat(playerIdResponse.readEntity(String.class)).contains("La partie est démarrée");
+	}
+
+	private Response startGame(String gameId) {
+		Response gameResponse = request("/game/" + gameId).post(null);
+		return gameResponse;
 	}
 
 	private Builder request(String relativePath) {
 		return client.target(String.format("http://localhost:%d" + relativePath, RULE.getLocalPort())).request();
 	}
 
-	private Response getPlayerId() {
-		return request("/player/id")
+	private Response getPlayerId(String gameId) {
+		return request("game/"+ gameId +"/player/id/")
 				.get();
 	}
 }

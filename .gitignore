@@ -1,3 +1,8 @@
+.idea
+gradle
+gradlew
+gradlew.bat
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Java template
 # Compiled class file
@@ -136,3 +141,4 @@ Supprimerait gradle/
 Supprimerait gradlew
 Supprimerait gradlew.bat
 /build/
+/.gradle/
