@@ -19,7 +19,7 @@ public class PlayerIdResourceTest {
 	public void should_not_get_player_id_when_game_is_started() throws GameAlreadyStartedException {
 		game.start();
 		
-		Response response = resources.target("/player/id").request().get();
+		Response response = resources.target("game/1/player/id").request().get();
 		
 		assertThat(response.getStatus()).isEqualTo(401);
 		assertThat(response.readEntity(String.class)).contains("La partie est démarrée");

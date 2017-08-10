@@ -28,7 +28,7 @@ public class PlayerIdResourceIT {
 
 	private String getPlayerId(Client client) {
 		Response response = client.target(
-                String.format("http://localhost:%d/player/id", RULE.getLocalPort()))
+                String.format("http://localhost:%d/game/1/player/id", RULE.getLocalPort()))
                 .request().get();
         return response.readEntity(String.class);
 	}

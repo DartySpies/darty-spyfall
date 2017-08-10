@@ -30,7 +30,8 @@ public class App extends Application<AppConfiguration> {
                     Environment environment) {
 		Game game = new Game();
 		environment.jersey().register(new PlayerIdResource(game));
-        environment.jersey().register(new GameResource(game));
+        Games games = new Games();
+		environment.jersey().register(new GameResource(games));
         enableCORS(environment);
     }
 

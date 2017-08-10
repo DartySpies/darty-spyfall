@@ -1,6 +1,7 @@
 package com.dartyspies.spyfall;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation.Builder;
@@ -20,7 +21,7 @@ public class GameFeatures {
 	private Client client = RULE.client();
 
 	@Test
-	public void should_prevent_additional_players_from_getting_an_id_after_game_start() throws Exception {
+	public void should_prevent_additional_players_from_getting_an_id_after_game_starts() throws Exception {
 		
 		Response newGameResponse = request("/game").get();
 		assertThat(newGameResponse.getStatus()).isEqualTo(200);
@@ -51,7 +52,31 @@ public class GameFeatures {
 	}
 
 	private Response getPlayerId(String gameId) {
-		return request("game/"+ gameId +"/player/id/")
+		return request("/game/"+ gameId +"/player/id/")
 				.get();
 	}
+	@Test
+	public void todo_should_not_create_game_without_player() throws Exception {
+		//TODO should not create game without player
+		fail("should not create game without player");
+	}
+	
+	@Test
+	public void should_play_different_games_with_players() throws Exception {
+		
+		String firstGameId = request("/game").get().readEntity(String.class);
+
+		getPlayerId(firstGameId);
+		getPlayerId(firstGameId);
+		
+		startGame(firstGameId);
+		
+		String secondGameId = request("/game").get().readEntity(String.class);
+		
+		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(204);
+		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(204);
+		
+		assertThat(startGame(secondGameId).getStatus()).isEqualTo(204);
+	}
+
 }
