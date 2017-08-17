@@ -19,7 +19,7 @@ public class GameResource {
 	@Path("/{gameId}")
 	public void start(@PathParam("gameId") String gameId) {
 		try {
-			games.start(Integer.valueOf(gameId));
+			games.start(gameId);
 		} catch (GameAlreadyStartedException e) {
 			throw new WebApplicationException(401);
 		}
@@ -27,8 +27,7 @@ public class GameResource {
 
 	@GET
 	public String create() {
-		// TODO : add should not return a String
-		return games.add();
+		return games.create();
 	}
 
 }

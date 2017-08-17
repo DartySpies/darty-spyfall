@@ -1,13 +1,13 @@
 package com.dartyspies.spyfall;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.Response;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.dropwizard.testing.junit.DropwizardAppRule;
@@ -34,7 +34,7 @@ public class GameFeatures {
 		getPlayerId(gameId);
 		getPlayerId(gameId);
 
-		Response gameStartResponse = startGame(gameId);
+		Response gameStartResponse = startGame(gameId); 
 		assertThat(gameStartResponse.getStatus()).isEqualTo(204);
 
 		Response playerIdResponse = getPlayerId(gameId);
@@ -55,10 +55,14 @@ public class GameFeatures {
 		return request("/game/"+ gameId +"/player/id/")
 				.get();
 	}
+
 	@Test
-	public void todo_should_not_create_game_without_player() throws Exception {
-		//TODO should not create game without player
-		fail("should not create game without player");
+	@Ignore("Test correspondant à une feature ultérieure.")
+	public void should_not_start_game_without_player() throws Exception {
+
+		String gameId = request("/game").get().readEntity(String.class);
+
+		assertThat(startGame(gameId).getStatus()).isEqualTo(403);
 	}
 	
 	@Test
@@ -73,8 +77,8 @@ public class GameFeatures {
 		
 		String secondGameId = request("/game").get().readEntity(String.class);
 		
-		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(204);
-		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(204);
+		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(200);
+		assertThat(getPlayerId(secondGameId).getStatus()).isEqualTo(200);
 		
 		assertThat(startGame(secondGameId).getStatus()).isEqualTo(204);
 	}

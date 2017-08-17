@@ -1,7 +1,6 @@
 package com.dartyspies.spyfall;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -22,7 +21,7 @@ public class GameResourceTest {
 
 	@Test
 	public void should_start_game() throws Exception {
-		int gameId = 1;
+		String gameId = "1";
 		Response response = resources.target("/game/" + gameId).request().post(null);
 		assertThat(response.getStatus()).isEqualTo(204);
 		verify(games).start(gameId);
@@ -30,8 +29,9 @@ public class GameResourceTest {
 
 	@Test
 	public void should_not_start_a_game_twice() throws Exception {
-		doThrow(new GameAlreadyStartedException()).when(games).start(1);
-		Response response = resources.target("/game/1").request().post(null);
+		String gameId = "1";
+		doThrow(new GameAlreadyStartedException()).when(games).start(gameId);
+		Response response = resources.target("/game/" + gameId).request().post(null);
 		assertThat(response.getStatus()).isEqualTo(401);
 	}
 	
@@ -40,7 +40,9 @@ public class GameResourceTest {
 		resources.target("/game").request().get();
 		resources.target("/game").request().get();
 		
-		verify(games, Mockito.times(2)).add();
+		verify(games, Mockito.times(2)).create();
 	}
+
+	// TODO on doit avoir une 404 sur le démarrage d'un jeu qui n'existe pas
 
 }

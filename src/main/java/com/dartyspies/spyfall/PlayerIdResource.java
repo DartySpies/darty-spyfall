@@ -8,15 +8,15 @@ import javax.ws.rs.WebApplicationException;
 @Path("game/{gameId}/player/id")
 public class PlayerIdResource {
 	private int nextId = 0;
-	private Game game;
+	private Games games;
 
-	public PlayerIdResource(Game game) {
-		this.game = game;
+	public PlayerIdResource(Games games) {
+		this.games = games;
 	}
 
 	@GET
 	public String getPlayerId(@PathParam("gameId") String gameId) {
-		if(game.isStarted()){
+		if(games.isStarted(gameId)){
 			throw new WebApplicationException("La partie est démarrée", 401);
 		}
 		return ++nextId + "";
