@@ -27,4 +27,14 @@ public class Games {
 			throw new GameNotFoundException(e);
 		}
 	}
+
+	public String getCard(String gameId, Integer playerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String addPlayer(String gameId) {
+		// TODO Auto-generated method stub
+		return get(gameId).addPlayer();
+	}
 }

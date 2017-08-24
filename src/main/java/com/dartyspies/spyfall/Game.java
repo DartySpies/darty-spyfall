@@ -3,6 +3,7 @@ package com.dartyspies.spyfall;
 public class Game {
 
 	private boolean started = false;
+	private int nextId = 1;
 
 	public boolean isStarted() {
 		return started;
@@ -13,6 +14,10 @@ public class Game {
 			throw new GameAlreadyStartedException();
 		}
 		started = true;
+	}
+
+	public String addPlayer() {
+		return "" + nextId++;
 	}
 
 }
