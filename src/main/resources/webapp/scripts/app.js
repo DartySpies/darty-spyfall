@@ -1,6 +1,6 @@
 $(function(){
     $.get({
-    	'url' : 'http://localhost:8080/player/id',
+    	'url' : 'http://localhost:8080/game/1/player/id',
     	'success' : function(data){
 				$('#player-id').text(data);
 			},
@@ -11,7 +11,7 @@ $(function(){
     	
     $('#start-game').on('click', function(){
     	$.post({
-    		'url' : 'http://localhost:8080/game',
+    		'url' : 'http://localhost:8080/game/1',
 			'success' : function(data){
 				$('#start-game').hide();
     		}

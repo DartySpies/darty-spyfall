@@ -13,24 +13,36 @@ import org.mockito.Mockito;
 import io.dropwizard.testing.junit.ResourceTestRule;
 
 public class GameResourceTest {
-	private  static final Game game = Mockito.mock(Game.class);
+	private  static final Games games = Mockito.mock(Games.class);
 	
 	@ClassRule
-	public static final ResourceTestRule resources = ResourceTestRule.builder().addResource(new GameResource(game)).build();
+	public static final ResourceTestRule resources = ResourceTestRule.builder().addResource(new GameResource(games)).build();
 	
 
 	@Test
 	public void should_start_game() throws Exception {
-		Response response = resources.target("/game").request().post(null);
+		String gameId = "1";
+		Response response = resources.target("/game/" + gameId).request().post(null);
 		assertThat(response.getStatus()).isEqualTo(204);
-		verify(game).start();
+		verify(games).start(gameId);
 	}
 
 	@Test
-	public void should_not_start_a_second_game() throws Exception {
-		doThrow(new GameAlreadyStartedException()).when(game).start();
-		Response response = resources.target("/game").request().post(null);
+	public void should_not_start_a_game_twice() throws Exception {
+		String gameId = "1";
+		doThrow(new GameAlreadyStartedException()).when(games).start(gameId);
+		Response response = resources.target("/game/" + gameId).request().post(null);
 		assertThat(response.getStatus()).isEqualTo(401);
 	}
+	
+	@Test
+	public void should_create_games() throws Exception {
+		resources.target("/game").request().get();
+		resources.target("/game").request().get();
+		
+		verify(games, Mockito.times(2)).create();
+	}
+
+	// TODO on doit avoir une 404 sur le démarrage d'un jeu qui n'existe pas
 
 }

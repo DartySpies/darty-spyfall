@@ -1,14 +1,15 @@
 package com.dartyspies.spyfall;
 
-import io.dropwizard.Application;
-import io.dropwizard.jersey.setup.JerseyEnvironment;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
+import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-import java.util.EnumSet;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 
 public class App extends Application<AppConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -28,10 +29,10 @@ public class App extends Application<AppConfiguration> {
     @Override
     public void run(AppConfiguration configuration,
                     Environment environment) {
-		Game game = new Game();
-		environment.jersey().register(new PlayerIdResource(game));
-        environment.jersey().register(new GameResource(game));
-        
+        Games games = new Games();
+		games.create();
+        environment.jersey().register(new PlayerIdResource(games));
+		environment.jersey().register(new GameResource(games));
         enableCORS(environment);
     }
 
