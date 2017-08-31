@@ -38,7 +38,9 @@ public class PlayerResourceTest {
 
 		games.start(gameId);
 
-		List<String> cards = Arrays.asList(getCard(gameId, playerId), getCard(gameId, secondPlayerId));
+		List<String> cards = Arrays.asList(
+				getCard(gameId, playerId), 
+				getCard(gameId, secondPlayerId));
 
 		assertThat(cards).containsOnlyOnce("SPY");
 	}

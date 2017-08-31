@@ -3,6 +3,7 @@ package com.dartyspies.spyfall;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,14 +29,42 @@ public class GameFeatures {
 	public void should_contain_one_spy_when_started() throws Exception {
 		String gameId = getGameId();
 
-		List<Integer> playerIds = Arrays.asList(getPlayerIdAsInteger(gameId), getPlayerIdAsInteger(gameId),
+		List<Integer> playerIds = Arrays.asList(
+				getPlayerIdAsInteger(gameId), 
+				getPlayerIdAsInteger(gameId),
 				getPlayerIdAsInteger(gameId));
 
 		Response gameResponse = startGame(gameId);
 		assertThat(gameResponse.getStatus()).isEqualTo(204);
 
-		List<String> playerRoles = playerIds.stream().map(id -> getCard(gameId, id)).collect(Collectors.toList());
+		List<String> playerRoles = playerIds.stream()
+				.map(id -> getCard(gameId, id))
+				.collect(Collectors.toList());
 		assertThat(playerRoles).containsOnlyOnce("SPY");
+	}
+
+	@Test
+	public void all_non_spy_players_should_share_the_same_location() throws Exception {
+		String gameId = getGameId();
+
+		List<Integer> playerIds = Arrays.asList(
+				getPlayerIdAsInteger(gameId), 
+				getPlayerIdAsInteger(gameId),
+				getPlayerIdAsInteger(gameId));
+
+		Response gameResponse = startGame(gameId);
+		assertThat(gameResponse.getStatus()).isEqualTo(204);
+
+		List<String> playerRoles = playerIds.stream()
+				.map(id -> getCard(gameId, id))
+				.filter(card -> !card.equals("SPY"))
+				.collect(Collectors.toList());
+		
+		assertAllCardsAreTheSame(playerRoles);
+	}
+
+	private void assertAllCardsAreTheSame(List<String> playerRoles) {
+		assertThat(new HashSet<>(playerRoles)).containsOnly(playerRoles.get(0));
 	}
 
 	private Integer getPlayerIdAsInteger(String gameId) {
@@ -114,4 +143,42 @@ public class GameFeatures {
 		assertThat(startGame(secondGameId).getStatus()).isEqualTo(204);
 	}
 
+	
+	@Test
+	public void should_randomly_assign_spy_card() {
+		HashSet<Integer> results = new HashSet<>();
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		results.add(getSpyIndexFromNewGame());
+		
+		assertThat(results.size()).isGreaterThan(1);
+	}
+
+	private int getSpyIndexFromNewGame() {
+		String firstGameId = request("/game").get().readEntity(String.class);
+
+		List<Integer> listPlayerIds = Arrays.asList(
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)), 
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)),
+				Integer.parseInt(getPlayerId(firstGameId).readEntity(String.class)));
+
+		
+		startGame(firstGameId);
+		
+		List<String> cards = listPlayerIds.stream().map(id -> getCard(firstGameId, id)).collect(Collectors.toList());
+		int spyIndex = cards.indexOf("SPY");
+		return spyIndex;
+	}
 }

@@ -29,8 +29,7 @@ public class Games {
 	}
 
 	public String getCard(String gameId, Integer playerId) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(gameId).getCard(playerId);
 	}
 
 	public String addPlayer(String gameId) {
