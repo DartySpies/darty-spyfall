@@ -61,10 +61,12 @@ public class GameFeatures {
 				.collect(Collectors.toList());
 		
 		assertAllCardsAreTheSame(playerRoles);
+		assertThat(playerRoles.get(0)).isIn(Game.LOCATIONS);
 	}
 
 	private void assertAllCardsAreTheSame(List<String> playerRoles) {
-		assertThat(new HashSet<>(playerRoles)).containsOnly(playerRoles.get(0));
+		String playerRole = playerRoles.get(0);
+		assertThat(new HashSet<>(playerRoles)).containsOnly(playerRole);
 	}
 
 	private Integer getPlayerIdAsInteger(String gameId) {
@@ -142,7 +144,6 @@ public class GameFeatures {
 		
 		assertThat(startGame(secondGameId).getStatus()).isEqualTo(204);
 	}
-
 	
 	@Test
 	public void should_randomly_assign_spy_card() {
@@ -157,6 +158,40 @@ public class GameFeatures {
 		results.add(getSpyIndexFromNewGame());
 		
 		assertThat(results.size()).isGreaterThan(1);
+	}
+	
+	@Test
+	public void should_randomly_select_a_game_location() throws Exception {
+		HashSet<String> results = new HashSet<>();
+		
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		results.add(getGameLocation());
+		
+		assertThat(results.size()).isGreaterThan(1);
+	}
+
+	private String getGameLocation() {
+		String gameId = getGameId();
+		
+		List<Integer> playerIds = Arrays.asList(
+				getPlayerIdAsInteger(gameId), 
+				getPlayerIdAsInteger(gameId),
+				getPlayerIdAsInteger(gameId));
+
+		startGame(gameId);
+		
+		return playerIds.stream()
+				.map(id -> getCard(gameId, id))
+				.filter(card -> !card.equals("SPY"))
+				.findFirst().get();
 	}
 
 	private int getSpyIndexFromNewGame() {
@@ -181,4 +216,5 @@ public class GameFeatures {
 		int spyIndex = cards.indexOf("SPY");
 		return spyIndex;
 	}
+
 }
