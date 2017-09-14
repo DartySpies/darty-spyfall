@@ -20,15 +20,14 @@ $(function(){
     });
     
     function startPolling(id) {
-    	setInterval(function(){
+    	var interval = window.setInterval(function(){
         	$.get({
             	'url' : 'http://localhost:8080/game/1/player/' + id + '/card',
             	'success' : function(data){
-        				console.log(data);
-        			},
-            	'error' : function(){
-            		alert('ERROR');
-            	}
+    				$('#player-card').text(data);
+    				clearInterval(interval);
+    				$('#start-game').hide();
+        		}
             });
     	}, 1000);
     }

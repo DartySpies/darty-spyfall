@@ -8,7 +8,7 @@ import java.util.List;
 public class Game {
 
 	private boolean started = false;
-	private int nextId = 1;
+	private int numberOfPlayers = 0;
 	private List<String> deck = new ArrayList<>();
 	public static final List<String> LOCATIONS = Arrays.asList("beach", "airport", "airplane", "bank", "bar", "capital hill", "carnival", "casino", "cimetery", "colosseum", "cruise ship", "dance club", "day spa", "hospital", "laboratory", "lagoon party", "military base", "movie studio", "museum", "pirate ship", "police station", "restaurant", "school", "space station", "sport stadium", "strip club", "train station", "submarine");
 
@@ -30,7 +30,7 @@ public class Game {
 		List<String> deck = new ArrayList<>();
 		deck.add("SPY");
 
-		for (int i = 1; i < nextId; i++) {
+		for (int i = 1; i < numberOfPlayers; i++) {
 			deck.add( location );
 		}
 		return deck;
@@ -44,11 +44,17 @@ public class Game {
 	}
 
 	public String addPlayer() {
-		return "" + nextId++;
+		numberOfPlayers++;
+		int playerId = numberOfPlayers;
+		return "" + playerId;
 	}
 
 	public String getCard(Integer playerId) {
 		return deck.get(playerId - 1);
+	}
+
+	public int getNumberOfCards() {
+		return deck.size();
 	}
 
 }
