@@ -27,4 +27,13 @@ public class Games {
 			throw new GameNotFoundException(e);
 		}
 	}
+
+	public String getCard(String gameId, Integer playerId) {
+		return get(gameId).getCard(playerId);
+	}
+
+	public String addPlayer(String gameId) {
+		// TODO Auto-generated method stub
+		return get(gameId).addPlayer();
+	}
 }
