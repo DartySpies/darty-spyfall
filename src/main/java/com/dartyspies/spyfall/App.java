@@ -33,6 +33,7 @@ public class App extends Application<AppConfiguration> {
 		games.create();
         environment.jersey().register(new PlayerResource(games));
 		environment.jersey().register(new GameResource(games));
+		environment.jersey().register(new LocationResource());
         enableCORS(environment);
     }
 

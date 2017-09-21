@@ -9,6 +9,14 @@ $(function(){
     		alert('La partie a déjà commencé');
     	}
     });
+    $.get({
+    	'url' : 'http://localhost:8080/locations',
+    	'success' : function(data){
+    			$.each(data['locations'], function (key, value) {
+    				$('#locations').append("<li>" + value + "</li>")
+    			});
+			}
+    });
     	
     $('#start-game').on('click', function(){
     	$.post({
