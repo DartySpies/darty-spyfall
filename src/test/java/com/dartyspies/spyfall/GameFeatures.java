@@ -110,7 +110,7 @@ public class GameFeatures {
 	}
 
 	private Builder request(String relativePath) {
-		return client.target(String.format("http://localhost:%d" + relativePath, RULE.getLocalPort())).request();
+		return client.target(String.format("http://localhost:%d/api" + relativePath, RULE.getLocalPort())).request();
 	}
 
 	private Response getPlayerId(String gameId) {

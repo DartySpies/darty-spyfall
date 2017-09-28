@@ -8,6 +8,7 @@ import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -23,12 +24,13 @@ public class App extends Application<AppConfiguration> {
 
     @Override
     public void initialize(Bootstrap<AppConfiguration> bootstrap) {
-        // nothing to do yet
+    	bootstrap.addBundle(new AssetsBundle("/webapp", "/", "index.html"));
     }
 
     @Override
     public void run(AppConfiguration configuration,
                     Environment environment) {
+    	environment.jersey().setUrlPattern("/api/*");
         Games games = new Games();
 		games.create();
         environment.jersey().register(new PlayerResource(games));

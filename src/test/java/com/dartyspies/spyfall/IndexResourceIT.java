@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
-public class LocationResourceIT {
-	
+public class IndexResourceIT {
+
 	@ClassRule
     public static final DropwizardAppRule<AppConfiguration> RULE =
             new DropwizardAppRule<AppConfiguration>(App.class,
@@ -20,14 +20,17 @@ public class LocationResourceIT {
 	private Client client = RULE.client();
 	
 	@Test
-	public void should_return_locations() throws Exception {
-		assertThat(getLocations(client)).contains(Game.LOCATIONS);
+	public void should_return_index_page() throws Exception {
+		Response response = getIndex(client);
+		assertThat(response.getStatus()).isEqualTo(200);
+		assertThat(response.getHeaderString("Content-Type")).contains("text/html");
+		assertThat(response.readEntity(String.class)).contains("<title>Spyfall</title>");
+	
 	}
 	
-	private String getLocations(Client client) {
-		Response response = client.target(
-                String.format("http://localhost:%d/api/locations", RULE.getLocalPort()))
+	private Response getIndex(Client client) {
+		return client.target(String.format("http://localhost:%d/", RULE.getLocalPort()))
                 .request().get();
-        return response.readEntity(String.class);
 	}
+	
 }
